@@ -143,7 +143,9 @@ class CustomTask(BaseTask):
                 origin_bullet_point_content, _, violate_dimensions, _ = split_line  
                 dimension_unit = self._string_to_dimension(violate_dimensions)
                 
-                result[origin_bullet_point_content] = dimension_unit
+                # This is used to remove the header case
+                if len(dimension_unit) > 0:
+                    result[origin_bullet_point_content] = dimension_unit
         
         return ResumeAnalysisResult(items=result)
     
