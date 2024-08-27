@@ -1,5 +1,6 @@
 from . import *
 from .openai_model import OpenAIModel
+from .azure_openai_model import AzureOpenAIModel
 from .palm_model import PaLMModel
 from .hf_text2text_model import HFText2TextModel 
 from .hf_textgeneration_model import HFTextGenerationModel
@@ -8,6 +9,7 @@ from .vllm import VllmModel
 
 LANGUAGE_MODELS = {
     "openai": OpenAIModel,
+    "azureopenai": AzureOpenAIModel,
     "palm": PaLMModel,
     "hf_text2text": HFText2TextModel,
     "hf_textgeneration":HFTextGenerationModel,

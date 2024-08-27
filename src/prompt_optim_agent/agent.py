@@ -104,6 +104,9 @@ class BaseAgent():
         """
         Start searching from initial prompt
         """
+        metric, _ = self.world_model.test_prompt(self.init_prompt)
+        print(metric)
+        exit()
         self.logger.info(f'init_prompt: {self.init_prompt}')
         start_time = time.time()
         

@@ -13,7 +13,7 @@ class WorldModel(Generic[State, Action]):
                  num_new_prompts = 1,
                  
                  train_shuffle = True,
-                 train_batch_size: int = 5,
+                 train_batch_size: int = 2,
                  test_batch_size: int = 1,
                  eval_batch_size: int = 1,
                  print_log: bool = True,
@@ -22,8 +22,7 @@ class WorldModel(Generic[State, Action]):
         """
         WorldModel is responsible for:
             State transition (generate new prompt based on the given node and batch data);
-            Calculating reward for the given nodes;
-            Calculating test metric on the test dataset.
++            Calculating test metric on the test dataset.
         """
         
         self.task = task
