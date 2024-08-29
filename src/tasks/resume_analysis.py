@@ -4,6 +4,7 @@ import os
 import json
 import difflib
 import uuid
+import numpy as np
 from enum import Enum
 from dataclasses import dataclass
 from dataclasses_json import dataclass_json
@@ -140,7 +141,7 @@ class CustomTask(BaseTask):
         for line in response.split("\n"):
             split_line = self._seperate_table_line(line, n_columns)
             if split_line:
-                origin_bullet_point_content, _, violate_dimensions, _ = split_line  
+                origin_bullet_point_content, _, _, violate_dimensions = split_line  
                 dimension_unit = self._string_to_dimension(violate_dimensions)
                 
                 # This is used to remove the header case
@@ -149,7 +150,11 @@ class CustomTask(BaseTask):
         
         return ResumeAnalysisResult(items=result)
     
-    def cal_correct(self, preds: list[ResumeAnalysisResult], labels: list[str], thr: float = 0.8): # this is a dataloader restrcition that not allowing to return a customzie class
+    def cal_metric(self, preds, labels, questions=None):
+        correct = self.cal_correct(preds=preds, labels=labels, thr = 0.8, is_binary=False)
+        return np.mean(correct)
+    
+    def cal_correct(self, preds: list[ResumeAnalysisResult], labels: list[str], thr: float = 0.8, is_binary: bool = True): # this is a dataloader restrcition that not allowing to return a customzie class
         comparisons = []
         for p, l in zip(preds, labels):
             l = ResumeAnalysisResult.from_json(l)
@@ -159,10 +164,12 @@ class CustomTask(BaseTask):
             print(f"Recall: {recall}, Precision: {precision}")
             print("==================================")
             metric = (recall + precision) / 2
-            if metric >= thr:
-                comparisons.append(1)
+
+            if is_binary:
+                comparisons.append(1 if metric >= thr else 0)
             else:
-                comparisons.append(0)
+                comparisons.append(metric)
+
         return comparisons
     
     def _evaluate(self, pred: ResumeAnalysisResult, label: ResumeAnalysisResult, thr: float = 0.9) -> (float, float):

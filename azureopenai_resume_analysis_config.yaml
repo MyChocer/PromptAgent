@@ -40,7 +40,7 @@ init_prompt: |
 
 
   ## Output
-  Persent analysis for work experience and project in a table with 4*X columns: Original Bullet Point, Problem Identified, Guidance Violated, and Improved Versions, X is number of bullets for that work experience.
+  Persent analysis for work experience and project in a table with 4*X columns: Original Bullet Point, Improved Versions, Problem Identified, and Guidance Violated, X is number of bullets for that work experience.
 
   ## Important
   Here are some critical human feedbacks that you should follow. If you don't follow them, you will be penalized:
@@ -50,7 +50,7 @@ init_prompt: |
   At last, please ensure all items in the guidance are carefully reviewed and applied during the process.
 
 task_setting:
-  train_size: 21
+  train_size: 28
   eval_size: 5 # data split for reward calculation
   test_size: 10 # if test_size is not 0, the optimized nodes will be tested at last.
   seed: 42 # if need to fixed shuffled dataset
