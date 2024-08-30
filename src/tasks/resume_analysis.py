@@ -141,12 +141,14 @@ class CustomTask(BaseTask):
         for line in response.split("\n"):
             split_line = self._seperate_table_line(line, n_columns)
             if split_line:
-                origin_bullet_point_content, _, _, violate_dimensions = split_line  
-                dimension_unit = self._string_to_dimension(violate_dimensions)
+                origin_bullet_point_content, _, _, violate_dimension = split_line  
+                dimension = self._get_dimension(violate_dimension)
                 
                 # This is used to remove the header case
-                if len(dimension_unit) > 0:
-                    result[origin_bullet_point_content] = dimension_unit
+                if dimension:
+                    if origin_bullet_point_content not in result:
+                        result[origin_bullet_point_content] = []
+                    result[origin_bullet_point_content].append(dimension)
         
         return ResumeAnalysisResult(items=result)
     
@@ -163,7 +165,8 @@ class CustomTask(BaseTask):
             print("==================================")
             print(f"Recall: {recall}, Precision: {precision}")
             print("==================================")
-            metric = (recall + precision) / 2
+            # metric = (recall + precision) / 2
+            metric = precision
 
             if is_binary:
                 comparisons.append(1 if metric >= thr else 0)
@@ -220,16 +223,11 @@ class CustomTask(BaseTask):
         
         return [item.strip() for item in split_line[1:-1]] 
 
-    def _string_to_dimension(self, raw_string: str, delimiter: str = ",") -> list[str]:
-        dimensions = raw_string.split(delimiter)
-
-        output = []
-        for dimension in dimensions:
-            for item in ResumeAnalysisDimension:
-                if is_same_text(item.value, dimension.strip()):
-                    output.append(item.value)
-                    break
-        return output
+    def _get_dimension(self, raw_string: str) -> str:
+        for item in ResumeAnalysisDimension:
+            if is_same_text(item.value, raw_string.strip()):
+                return item.value
+        return None
     
 
 def is_same_text(s1, s2, thr = 0.9):
